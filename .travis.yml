@@ -1,0 +1,20 @@
+language: node_js # specifying the language
+node_js:
+  - "12" # specifying the nod ejs version that are project requires
+dist: trusty # linux distribution that will run on our cloud machine
+services: # describe the dependencies that we need in our project to build
+  - mongodb
+  - redis-server
+env:
+  - NODE_ENV=ci PORT=3000 # specifying which enviorment variable to use
+cache:
+  directories: #specifying to cache these directories for follow up builds
+    - node_modules
+    - client/node_modules
+install: # command to install the dependencies and build our project
+  - npm install
+  - npm run build
+script: # if shell is closed dont kill anything this command creates, also run this command in subshell
+  - nohup npm run start &
+  - sleep 3 # wait for three seconds
+  - npm run test #startup our test suite
